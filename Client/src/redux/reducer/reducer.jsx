@@ -14,7 +14,7 @@ const reducer = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 myFavorites: payload,
-                allCharacters: payload
+                allCharactersFav: payload
             };
         //anterior
         /*  return {
@@ -23,11 +23,12 @@ const reducer = (state = initialState, { type, payload }) => {
              allCharactersFav: [...state.allCharactersFav, payload]
          } */
         case REMOVE_FAV:
-            let updateFavs = state.allCharactersFav.filter(fav => fav.id !== Number(payload));
             //cambio por express
+            //let updateFavs = state.allCharactersFav.filter(fav => fav.id !== Number(payload));
             return { 
                 ...state, 
-                myFavorites: payload 
+                myFavorites: payload,
+                allCharactersFav: payload
             };
         // anterior
         /* return {

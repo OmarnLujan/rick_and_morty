@@ -17,9 +17,6 @@ function App() {
 
    const [access, setAccess] = useState(false);
 
-   const EMAIL = "prueba@gmail.com"
-   const PASSWORD = "123456"
-
    const navigate = useNavigate();
    /* 
      function login(userData){
@@ -28,59 +25,90 @@ function App() {
            navigate("/home")
         }
      } */
-   function login(userData) {
-      const { email, password } = userData;
-      const URL = 'http://localhost:3001/rickandmorty/login/';
-      axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
+   //Funcion express con promesa
+   /*   function login(userData) {
+        const { email, password } = userData;
+        const URL = 'http://localhost:3001/rickandmorty/login/';
+        axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
+           const { access } = data;
+           setAccess(data);
+           access && navigate('/home');
+        });
+     } */
+   //funcion express asyn await
+   async function login(userData) {
+      try {
+         const { email, password } = userData;
+         const URL = 'http://localhost:3001/rickandmorty/login/';
+         const { data } = await axios(URL + `?email=${email}&password=${password}`)
          const { access } = data;
-         setAccess(data);
+         setAccess(access);
          access && navigate('/home');
-      });
+      } catch (error) {
+         console.log(error.message)
+      }
    }
-
 
    useEffect(() => {
       !access && navigate("/");
    }, [access]);
 
-   const onSearch = id => {
-      const characterId = characters.filter(character => character.id === Number(id))
-      if (characterId.length) return alert("The character already exists!!!");
-      if (id < 1 || id > 826) return alert("There is no a character with the entered id!!!");
-      axios(`http://localhost:3001/rickandmorty/character/${id}`).then(({ data }) => {
+   /*  const onSearch = (id => {
+       const characterId = characters.filter(character => character.id === id)
+       if (characterId.length > 0) return alert("The character already exists!!!");
+       if (id < 1 || id > 826) return alert("There is no a character with the entered id!!!");
+       axios(`http://localhost:3001/rickandmorty/character/${id}`).then(({ data }) => {
+          console.log(data.name)
+          data.name
+             ? setCharacters((oldChars) => [...oldChars, data])
+             : window.alert('¡No hay personajes con este ID!');
+       });
+    }) */
+
+   const onSearch = async (id) => {
+      try {
+         const characterId = characters.filter(character => character.id === id)
+         if (characterId.length > 0) return alert("The character already exists!!!");
+         if (id < 1 || id > 826) return alert("There is no a character with the entered id!!!");
+         const { data } = await axios(`http://localhost:3001/rickandmorty/character/${id}`)
          data.name
             ? setCharacters((oldChars) => [...oldChars, data])
             : window.alert('¡No hay personajes con este ID!');
-   });
-   }
-   
-const onClose = id => {
-   setCharacters(characters.filter(character =>
-      character.id !== Number(id)))
-};
-const location = useLocation();
-
-return (
-
-   <div className='App'>
-      {
-         location.pathname !== "/"
-            ? <Nav onSearch={onSearch} />
-            : null
       }
-      <hr></hr>
-      <Routes>
-         <Route exact path="/" element={<Form login={login} />} />
-         <Route exact path="/about" element={<About />} />
-         <Route exact path="/home" element={<Cards characters={characters} onClose={onClose} />} />
-         <Route exact path="/detail/:id" element={<Detail />} />
-         <Route path='/favorites' element={<Favorites onClose={onClose} />} />
+      catch (error) {
+         //alert("There is no a character with the entered id!!!");
+         console.log(error.message)
+      }
+   }
 
 
-      </Routes>
-   </div>
+   const onClose = id => {
+      setCharacters(characters.filter(character =>
+         character.id !== id))
+   };
+   const location = useLocation();
 
-);
+   return (
+
+      <div className='App'>
+         {
+            location.pathname !== "/"
+               ? <Nav onSearch={onSearch} />
+               : null
+         }
+         <hr></hr>
+         <Routes>
+            <Route exact path="/" element={<Form login={login} />} />
+            <Route exact path="/about" element={<About />} />
+            <Route exact path="/home" element={<Cards characters={characters} onClose={onClose} />} />
+            <Route exact path="/detail/:id" element={<Detail />} />
+            <Route path='/favorites' element={<Favorites onClose={onClose} />} />
+
+
+         </Routes>
+      </div>
+
+   );
 }
 
 export default App;

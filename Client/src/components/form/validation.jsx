@@ -5,7 +5,6 @@ export function validate(userData) {
     const regexEmail = /\S+@\S+\.\S+/;
     const errors = {};
     const regexPassword = new RegExp("[0-9]");
-    console.log(userData.email);
     if (!regexEmail.test(userData.email)) {
         errors.email = 'Debe ingresar un email valido';
     }

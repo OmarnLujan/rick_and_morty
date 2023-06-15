@@ -22,7 +22,7 @@ function Form(props) {
             ...userData,
             [e.target.name]: e.target.value
         }))
-        console.log(userData);
+      
     }
     const handlerSubmit = event => {
         event.preventDefault();

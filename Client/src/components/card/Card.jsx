@@ -1,121 +1,94 @@
-import styled from "styled-components";
+//import styled from "styled-components";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { addFav, removeFav } from "../../redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
+import styles from "../cards/Cards.module.css";
 
-export default function Card({character,onClose}) {
+export default function Card({ character, onClose }) {
+  const dispatch = useDispatch();
 
-   const dispatch = useDispatch();
+  const [isFav, setIsFav] = useState(false);
 
-   const [isFav, setIsFav] = useState(false);
+  const { allCharactersFav } = useSelector((state) => {
+    return state;
+  });
 
-   const { allCharactersFav } = useSelector((state) => {
-      return state;
-   });
-
-   const handleFavorite = () => {
-      if (isFav) {
-         setIsFav(false);
-         dispatch(removeFav(character.id))
-      } else {
-         setIsFav(true);
-         dispatch(addFav(character))
+  const handleFavorite = () => {
+    if (isFav) {
+      setIsFav(false);
+      dispatch(removeFav(character.id));
+    } else {
+      setIsFav(true);
+      dispatch(addFav(character));
+    }
+  };
+  useEffect(() => {
+    allCharactersFav.forEach((fav) => {
+      if (fav.id === character.id) {
+        setIsFav(true);
       }
-   }
-   useEffect(() => {
-      allCharactersFav.forEach((fav) => {
-         if (fav.id === character.id) {
-            setIsFav(true);
-         }
-      });
-   }, [allCharactersFav]);
+    });
+  }, [allCharactersFav]);
 
-   const DivTable = styled.div`
-      width: 300px;
-      height: 70px;
-      background-color:#008000;
-      display:flex;
-      justify-content: center;
-      align-items: center
-      `;
-
-   const DivMonitorWrapper = styled.div`
-      background: #050321;
-      width: 290px;
-      height: 60px;
-      box-shadow: 0px 2px 2px 2px rgba(0,0,0,0.30);
-      margin:auto
-      `;
-
-   const DivMonitor = styled.div`
-      margin: auto;
-      margin-top:9px;
-      width: 270px;
-      height: 40px;
-      background-color: #344151;
-      overflow: hidden;
-      white-space: nowrap;
-      box-shadow: inset 0px 5px 10px 2px rgba(0,0,0,0.3);
-      `;
-
-   const Ptexto = styled.p`
-      margin: auto;
-      font-family: 'VT323', monospace;
-      font-size: 35px;
-      position: relative;
-      display: inline-block;
-      animation: move 20s infinite linear;
-      color: 	#008000;
-      margin:auto;
-      @keyframes move {
-      from {
-       left: 800px;
-      }
-      to {
-       left: -800px;
-       }
-      }`;
-
-   const DivCard = styled.div`
+  /*   const StyledDiv = styled.div`
+    width: var(--s);
+    margin: var(--m);
+    height: calc(var(--s) * (1.1547 * 1.6));
+    display: inline-block;
+    font-size: initial;
+    clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    margin-bottom: calc(var(--m) - var(--s) * 0.0885);
+    background-image: url(${(props) => props.image});
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     
-      justify-content: space-around;
-      align-items: center;
-      box-sizing: border-box;
-      color: 	#008000;
-    `;
-   const Button = styled.button`
-      position:absolute;
-      display:inline-block;
-      color:#c43830;
-      background-color: transparent;
-      border: transparent;
-   `;
-   const H2Name = styled.h2`
-      position:absolute;
-      display:inline-block;
-      text-align: center;
-      background-color: whitesmoke;
-      transform: translate(50%, 760%);
-   `;
-   const Img1 = styled.img`
-      border-radius: 10px;
-   `;
+  `; */
+  /*   const StyledBefore = styled.div`
+    content: "";
+    width: calc(var(--s) / 2 + var(--m));
+    float: left;
+    height: 120%;
+    shape-outside: repeating-linear-gradient(
+      #0000 0 calc(var(--f) - 3px),
+      #000 0 var(--f)
+    );
+  `; */
+  return (
+    <div
+      className={styles["container-div"]}
+      style={{ backgroundImage: `url(${character.image})` }}
+      
+    >
+      
+      
+        {isFav ? (
+          <button onClick={handleFavorite}className={styles.boton}>💚</button>
+        ) : (
+          <button onClick={handleFavorite}className={styles.boton}>🤍</button>
+        )}
+      
 
-   return (
-      <DivCard>
-         <div>
+        <button onClick={() => onClose(character.id)}className={styles.boton2}>❌</button>
+        <Link to={`/detail/${character.id}`}><button className={styles.boton3}></button></Link>
+    </div>
+  );
+}
+
+/*       <DivCard>
+      <div>
             {
                isFav ? (
-                  <button onClick={handleFavorite}>❤️</button>
-               ) : (
-                  <button onClick={handleFavorite}>🤍</button>
+          <button onClick={handleFavorite}>❤️</button>
+        ) : (
+          <button onClick={handleFavorite}>🤍</button>
                )
             }
-         </div>
+      </div>
          <Button onClick={() => onClose(character.id)} >X</Button>
          <Link to={`/detail/${character.id}`}>
-            <H2Name>{character.name}</H2Name>
+            <h2>{character.name}</h2>
          </Link>
          <Img1 src={character.image} alt='300px' />
          <DivTable key={character.id}>
@@ -127,9 +100,10 @@ export default function Card({character,onClose}) {
                   <h2>{character.species}</h2>
                   <h2>{character.gender}</h2>
                   <h2>{character.origin.name}</h2> */
-               </DivMonitor>
+/*  </DivMonitor>
             </DivMonitorWrapper>
          </DivTable>
       </DivCard>
    );
 };
+ */

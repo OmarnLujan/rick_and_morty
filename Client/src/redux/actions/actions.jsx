@@ -1,4 +1,4 @@
-import { ADD_FAV, REMOVE_FAV,FILTER,ORDER} from "./types";
+import { ADD_FAV, REMOVE_FAV, FILTER, ORDER } from "./types";
 import axios from "axios";
 
 // funcion vieja 
@@ -11,27 +11,36 @@ import axios from "axios";
 //funcion con express
 export const addFav = (character) => {
     const endpoint = 'http://localhost:3001/rickandmorty/fav';
-    return (dispatch) => {
-       axios.post(endpoint, character).then(({ data }) => {
-          return dispatch({
-             type: ADD_FAV,
-             payload: data,
-          });
-       });
-    };
- };
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(endpoint, character);
+            
+            return dispatch({
+                type: ADD_FAV,
+                payload: data,
+            });
+
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+};
 // funcion para express
- export const removeFav = (id) => {
+export const removeFav = (id) => {
     const endpoint = 'http://localhost:3001/rickandmorty/fav/' + id;
-    return (dispatch) => {
-       axios.delete(endpoint).then(({ data }) => {
-          return dispatch({
-             type: REMOVE_FAV,
-             payload: data,
-       });
-       });
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.delete(endpoint);
+            //if(!data.length) throw Error("Vacio")
+            return dispatch({
+                type: REMOVE_FAV,
+                payload: data,
+            });
+        } catch {
+            console.log(error.message)
+        }
     };
- };
+};
 // funcion anterior
 /* export function removeFav(id) {
     return {

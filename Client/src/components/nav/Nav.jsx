@@ -1,5 +1,5 @@
 import React from "react";
-
+import Ramdon from "../random/Ramdon.jsx";
 import SearchBar from "../searchBar/SearchBar.jsx";
 import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
@@ -27,6 +27,7 @@ export default function Nav({onSearch }) {
                     About
                 </button>
             </NavLink>
+            <Ramdon onSearch={onSearch}/>
             <SearchBar onSearch={onSearch} />
         </DivNav>
     )
